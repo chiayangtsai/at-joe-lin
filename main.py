@@ -5,7 +5,7 @@ from basics import *
 
 
 if __name__ == '__main__':
-    testID =7
+    testID = 5
 
     if testID == 0:
         print("Hello world")

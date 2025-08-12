@@ -59,8 +59,20 @@ def leetcode_shuffle_two_lists():
     # c=> [3, 0, 5, 7, 1, 6, 4, 2]
     #HW0808 : O(N)
     i, j = 0, 0
-    # while i < len(a) and j < len(b):
 
+    while i < len(a) and j < len(b):
+        if i == j:
+            c.append(a[i])
+            i += 1
+        else:
+            c.append(b[j])
+            j += 1
+    if i < len(a):
+        c += a[i::]
+    if j < len(b):
+        c += b[j::]
+
+    print(c)
     return
 
 
@@ -71,19 +83,33 @@ def leetcode_merge_two_lists():
     #Q: Given two sorted lists a and b, merge these two lists to c and c is also sorted
     # c=> [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11]
     #HW0808 : O(N)
+    i, j = 0, 0
 
+    while i < len(a) and j < len(b):
+        if a[i] > b[j]:
+            c.append(b[j])
+            j += 1
+        else:
+            c.append(a[i])
+            i += 1
+    if i < len(a):
+        c += a[i::]
+    if j < len(b):
+        c += b[j::]
+
+    print(c)
     return
 
 
 def basic_list_ii():
     a = [5, 4, 1, 3, 2, 9, 8]
     #    0  1  2  3  4  5  6
-    d = a[2:6:1] # => a[2:6]
+    d = a[2:6:1]  # => a[2:6]
     print("get the new list from index-2 to index-5: %s" % str(d))
 
     d = a[3:]
     print("get the new list from index-3 to index-6: %s" % str(d))
 
     #HW0808(VK) : start from here next time
-    
+
     return
