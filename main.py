@@ -1,9 +1,15 @@
 #windows platform
 
+import sys
 from basics import *
 
 if __name__ == '__main__':
-    testID = 6
+    testID = 12
+
+    if len(sys.argv) != 2:
+        print("default: %d" % testID)
+    else:
+        testID = int(sys.argv[1])
 
     if testID == 0:
         print("Hello world")
@@ -23,17 +29,23 @@ if __name__ == '__main__':
         basic_list_iii()  # built-in methods
     elif testID == 9:
         leetcode_stock_trade_i()  #sliding window
+    elif testID == 10:
+        leetcode_stock_trade_iii() #<=== HW0816(VK): start from here
+    elif testID == 11: 
+        basic_copy() #shallow copy, deep copy, immutable/mutable
+    elif testID == 12:
+        basic_string() # ASCII, KES algorithm
+    elif testID == 14:
+        leetcode_alphabet_histogram()
+
 '''
 上
 
-- copy : shallow copy, deep copy, mutable/immutable
-- call-by-reference
-- string / ASCII 
-- KES algorithm (LUT)
 - sliding window
 
 中
 - dict : LUT
+- leetcode : two sum 
 - sliding window + LUT
 - decimal, binary representation
 - .sort()
