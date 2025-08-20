@@ -4,7 +4,7 @@ import sys
 from basics import *
 
 if __name__ == '__main__':
-    testID = 12
+    testID = 20
 
     if len(sys.argv) != 2:
         print("default: %d" % testID)
@@ -37,19 +37,25 @@ if __name__ == '__main__':
         basic_string() # ASCII, KES algorithm
     elif testID == 14:
         leetcode_alphabet_histogram()
+    elif testID == 15:
+        leetcode_lonest_substring_without_repeating() # sliding, LUT (KES), LUT(dict)
+    elif testID == 16:
+        leetcode_alternating_strings() #sliding window
+    elif testID == 20:
+        basic_dict()
+        
 
 '''
 上
 
-- sliding window
-
 中
 - dict : LUT
+- search : single element, series of numbers
 - leetcode : two sum 
-- sliding window + LUT
+- sliding window + LUT (Look-up Table, Hash table)
+- string <-> list
 - decimal, binary representation
 - .sort()
-- string <-> list
 
 下
 - recursive programming | DP principles

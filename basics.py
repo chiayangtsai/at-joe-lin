@@ -1,3 +1,49 @@
+
+
+def basic_dict():
+    # list/array : find : O(N), memory ordered   => pros: random access
+    # dict       : find : O(1), memory unordered => cons: space complexity ~O(N)
+    #------ init ---
+    tab= {"John":90, "Vic":70, "Jason":95, "Mia":60, "Mary":70}
+
+    # ------ insert ----
+    #Q: insert "Jens", and his score is 80
+    tab["Jens"] = 80
+
+    # ------ find/search key ----
+    #Q: access "Apple"
+    #tab["Apple"] <=== (X) key does not exist
+    key = "John"
+    if key in tab: # O(1)
+        print("%s, %d" % (key, tab[key]))
+    else:
+        print("key does not exit")
+
+
+    print("------ .keys ----")
+    # .keys() : return list of keys
+    print(list(tab.keys()))
+
+    for key in tab.keys():
+        print("%s, %d" % (key, tab[key]))
+
+    print("------ .items ----")
+    # .items() : return list of tuples, each tuple (key, value)
+    print(list(tab.items()))
+    # [('John', 90), ('Vic', 70), ('Jason', 95), ('Mia', 60), ('Mary', 70), ('Jens', 80)]
+
+    for x in tab.items():
+        print(x[0], x[1])
+    print("==")
+    for key,score in tab.items():
+        print(key, score)
+    
+    # ---- erase -----
+    # HW0819(VK): start from here
+
+
+
+
 def basic_string():
     # --- ASCII ---
     # how many ASCII codes? 128 <== 7 bits
@@ -25,19 +71,19 @@ def leetcode_alphabet_histogram():
     p 1
     z 1
     '''
-    
+
     s = "..b* a9bAQ..z(da#p;"
 
     #time complexity: O(N)
     #space complexity : O(1)
-    res = [0]*26 # key: alphabet order ,  value: show times
+    res = [0] * 26  # key: alphabet order ,  value: show times
     # KES algorithm : using the ASCII characteristics to create a list as a table
 
     # time complexity : O(N)
     # 1st step : collect statistics
     for c in s:
         #if ord(c) >= ord('a') and ord(c) <= ord('z'):
-        if ord('a') <= ord(c) <= ord('z'): 
+        if ord('a') <= ord(c) <= ord('z'):
             res[ord(c) - ord('a')] += 1
 
     # time complexity : O(1)
@@ -45,21 +91,21 @@ def leetcode_alphabet_histogram():
     for i in range(26):
         if res[i] > 0:
             print(chr(i + ord('a')), " ", res[i])
-    
+
 
 def basic_copy():
     #--- deep copy ---
     a = 5
-    b = a #deep copy
+    b = a  #deep copy
     print("a= %d, b= %d" % (a, b))
     b = -1
     print("a= %d, b= %d" % (a, b))
 
     #--- shallow copy ---
-    a= [3, 1, 2] # a is memory address, a[0], a[1], a[2]
-    b = a # <== shallow copy ( pointer copy in C/C++)
+    a = [3, 1, 2]  # a is memory address, a[0], a[1], a[2]
+    b = a  # <== shallow copy ( pointer copy in C/C++)
     print("a= %s, b= %s" % (str(a), str(b)))
-    b[0]= -1
+    b[0] = -1
     print("a= %s, b= %s" % (str(a), str(b)))
 
     #--- mutable / immutable -----
@@ -73,29 +119,29 @@ def basic_copy():
      - shallow copy? NO
     '''
     #--- deep copy for mutable variable ---
-    a= [3, 1, 2, 0] 
+    a = [3, 1, 2, 0]
     #-- method 0 ---
-    b= []
+    b = []
     for x in a:
         b.append(x)
     #-- method 0.1 ---
-    b= [x for x in a]
+    b = [x for x in a]
     # === OVA ==
     #Q: get all element greater than 1 in a to b
-    b= [x for x in a if x > 1]
+    b = [x for x in a if x > 1]
     # ==========
 
     #-- method 1 ---
     b = list(a)
 
     #-- method 2----
-    b= a[:]
+    b = a[:]
 
     print("a= %s, b= %s" % (str(a), str(b)))
-    b[0]= -1
+    b[0] = -1
     print("a= %s, b= %s" % (str(a), str(b)))
-    
-    #---- immutable ----- readable but not writable 
+
+    #---- immutable ----- readable but not writable
     name = "John"
     #name[0] = "L" # => "Lohn" <== (X) string is immutable
     for x in name:
@@ -508,7 +554,27 @@ def leetcode_stock_trade_iii():
         # straight-forward : O(N^2)
         # best : O(N)
         #
-        return -1  #TBD
+        n = len(prices)
+        if n == 0:
+            return 0
+        left = [0] * n
+        min_price = prices[0]
+
+        for i in range(1, n):
+            min_price = min(min_price, prices[i])
+            left[i] = max(left[i - 1], prices[i] - min_price)
+
+        right = [0] * n
+        max_price = prices[-1]
+
+        for i in range(n - 2, -1, -1):
+            max_price = max(max_price, prices[i])
+            right[i] = max(right[i + 1], max_price - prices[i])
+
+        res = 0
+        for i in range(n):
+            res = max(res, left[i] + right[i])
+        return res
 
     prices = [1, 3, 5, 4, 3, 7, 6, 9, 2, 4]
     print("max profit : %d (ans 10)\n\n" % maxProfit(prices))
@@ -524,3 +590,106 @@ def leetcode_stock_trade_iii():
 
     prices = [7, 6, 4, 3, 1]
     print("max profit : %d (ans 0)\n\n" % maxProfit(prices))
+
+
+def leetcode_lonest_substring_without_repeating():
+    #https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+    # Given a string s, find the length of the longest
+    # substring
+    #  without repeating characters.
+
+    # Example 1:
+
+    # Input: s = "abcabcbb"
+    # Output: 3
+    # Explanation: The answer is "abc", with the length of 3.
+
+    # Example 2:
+    # Input: s = "bbbbb"
+    # Output: 1
+    # Explanation: The answer is "b", with the length of 1.
+
+    # Example 3:
+    # Input: s = "pwwkew"
+    # Output: 3
+    # Explanation: The answer is "wke", with the length of 3.
+    # Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+    # Constraints:
+
+    # 0 <= s.length <= 5 * 10^4
+    # s consists of English letters, digits, symbols and spaces
+
+    '''
+    time complexity : O(N)
+    NOTE : "dict" is not allowed
+
+        0 1 2 3 4 5 6 7 8 9
+        a b c a b c b b a c
+        r
+        l
+        1 2 3        
+    '''
+    #time complexity: O(N)
+    #space complexity: O(1) 
+    def lengthOfLongestSubstring(s):
+
+        left = 0
+        arr = [-1] * 128 # key: ord()    value: index
+        max_length = 0
+        for right in range(len(s)): # right = 0
+            if arr[ord(s[right])] >= left: #    -1 >= 0
+                left = arr[ord(s[right])] + 1 # left = 1
+            else:
+                max_length = max(max_length, right - left + 1) # max=1
+            arr[ord(s[right])] = right # ord(a):0
+                
+        return max_length #TBD
+
+    print("%s : %d (ans 3)" %
+          ("abcabcbbac", lengthOfLongestSubstring("abcabcbbac")))
+    print("%s : %d (ans 1)" % ("bbbbb", lengthOfLongestSubstring("bbbbb")))
+    print("%s : %d (ans 3)" % ("pwwkew", lengthOfLongestSubstring("pwwkew")))
+
+    #-----
+
+
+def leetcode_alternating_strings():
+    # -- APCS ---
+    
+    # k-alternating string:
+    #          StRiNg => 1-alternating string
+    #          heLLow => 2-alternating string
+    #          aBBaaa => NOT alternating string
+    #          aaaAAbbCCCC => NOT alternating string
+
+    # Q: Given k and a string, find the maximum sub-string length which matches k-alternating string condition.
+    # Example:
+    #       Given k = 2, string = "aBBaaa" => the maximum k-alternating string is BBaa, Answer:  4
+    #       Given k= 1, string = "BaBaBB" => the maximum k-alternating string is BaBaB, Anser : 5
+    #
+    def getMaxAlternatingStringLength(k, s):
+        #HW0819 : sliding window, Finite-State Machine(FSM) (optional)
+        return -1 #TBD
+
+
+    k = 1
+    s = "aBBdaaa"
+    maxLen = getMaxAlternatingStringLength(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 2)" % (k, s, maxLen))
+
+    k = 3
+    s = "DDaasAAbbCC"
+    maxLen = getMaxAlternatingStringLength(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 3)" % (k, s, maxLen))
+
+    k = 2
+    s = "aafAXbbCDCCC"
+    maxLen = getMaxAlternatingStringLength(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 8)" % (k, s, maxLen))
+
+    k = 3
+    s = "DDaaAAbbCC"
+    maxLen = getMaxAlternatingStringLength(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 0)" % (k, s, maxLen))
