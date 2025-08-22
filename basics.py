@@ -38,9 +38,19 @@ def basic_dict():
     for key,score in tab.items():
         print(key, score)
     
-    # ---- erase -----
-    # HW0819(VK): start from here
+    print("---- erase -----")
+    # for "list" data type:  .pop(index)  .pop()  
+    # for "dict" data type:  .pop(key) .pop()(X)
+    key = "Jens"
+    if key in tab:
+        tab.pop(key)
 
+    print(tab)
+    print("---- key type ----")
+    # look-up table key : immutable
+    # list as key : (X) <== list is mutable
+    # tuple as key : (O) <== tuple is immutable
+    dict= {  (3, 1):"John"  ,   (2,0):"Mary"}
 
 
 
@@ -652,7 +662,111 @@ def leetcode_lonest_substring_without_repeating():
     print("%s : %d (ans 1)" % ("bbbbb", lengthOfLongestSubstring("bbbbb")))
     print("%s : %d (ans 3)" % ("pwwkew", lengthOfLongestSubstring("pwwkew")))
 
-    #-----
+    print("---------")
+    #time complexity: O(N)
+    #space complexity: O(N) 
+    def lengthOfLongestSubstringDict(s):
+        dict = {s[0]:0}
+        max_length = 1
+        left = 0
+        for right in range(1, len(s)):
+            if s[right] in dict and dict[s[right]] >= left:
+                left = dict[s[right]] + 1 
+            else:
+                max_length = max(max_length, right - left + 1) 
+                
+            dict[s[right]] = right
+            
+        return max_length #TBD
+    # abcabcbbac
+    #
+    print("%s : %d (ans 3)" %
+          ("abcabcbbac", lengthOfLongestSubstringDict("abcabcbbac")))
+
+    print("%s : %d (ans 1)" % ("bbbbb", lengthOfLongestSubstringDict("bbbbb")))
+    print("%s : %d (ans 3)" % ("pwwkew", lengthOfLongestSubstringDict("pwwkew")))
+    
+
+def leetcode_two_sum():
+    nums = [7, 4, 1, 6, 5, 9, 4, 0, 6]
+    target = 10
+    # 4 6
+    # 1 9
+    tab = {} # key : number  value: show times
+    #        #
+    
+    # stage 1: collect
+    for i in range(len(nums)): 
+        if tab[nums[i]] not in tab:
+            tab[nums[i]] = 1
+        else:
+            tab[nums[i]] += 1
+        
+    # stage 2: analysis #HW0821 : shall consider show times of "5"
+    for i in range(len(nums)):
+        if target - nums[i] in tab:
+            
+            if tab[nums[i]] != 0:
+                print(nums[i],target - nums[i])            
+                tab[nums[i]] = 0
+
+
+def leetcode_roman_int():
+    # https://leetcode.com/problems/roman-to-integer/description/
+
+    '''
+    Symbol       Value
+    I             1
+    V             5
+    X             10
+    L             50
+    C             100
+    D             500
+    M             1000
+        
+    Example 1:
+
+    Input: s = "III"
+    Output: 3
+    Explanation: III = 3.
+    Example 2:
+
+    Input: s = "LVIII"
+    Output: 58
+    Explanation: L = 50, V= 5, III = 3.
+    Example 3:
+
+    Input: s = "MCMXCIV"
+    Output: 1994
+    Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+    
+    '''
+
+    def romanToInteger(s):
+        #HW0821
+        return -1 #TBD
+
+    s= "III"
+    print("%s->%d (ans: 3)" % (s, romanToInteger(s)))
+
+    s= "LVIII"
+    print("%s->%d (ans: 58)" % (s, romanToInteger(s)))
+    
+    s= "MCMXCIV"
+    print("%s->%d (ans: 1994)" % (s, romanToInteger(s)))
+    
+
+def leetcode_int_roman():
+    # https://leetcode.com/problems/integer-to-roman/description/
+    def intToRoman(num):
+        #HW0821
+        return "" #TBD
+        
+    num = 58
+    print("%d => %s (ans: LVIII)" % (num, intToRoman(num)))
+
+    num = 1994
+    print("%d => %s (ans: MCMXCIV)" % (num, intToRoman(num)))
 
 
 def leetcode_alternating_strings():
@@ -669,9 +783,89 @@ def leetcode_alternating_strings():
     #       Given k = 2, string = "aBBaaa" => the maximum k-alternating string is BBaa, Answer:  4
     #       Given k= 1, string = "BaBaBB" => the maximum k-alternating string is BaBaB, Anser : 5
     #
+
+    '''
+    k = 2
+    s = "aafAXbbCDCCC"
+    and => 8
+
+      
+     case   0 0 0 1 1 0 0 1 1 1 1 1 
+                                  h
+                                t
+     acc    1 2 2 1 2 1 2 1 2
+                            8
+
+    k =1 <== special case 
+    '''
+
+    
+    def isAlter(n, s):
+        sameCnt = 1
+        l = 0
+        if len(s) < n:
+            return False
+        for r in range(1, len(s)):
+            if s[r] == s[l]:
+                sameCnt += 1
+                if sameCnt > n:
+                    return False
+            else:
+                if sameCnt != n:
+                    return False
+                l = r
+                sameCnt = 1
+        if sameCnt != n:
+            return False
+        return True
+                
+    def stringToBool(s):
+        res = []
+        for c in s:
+            if 'a' <= c <= 'z':
+                res.append(False)
+            else:
+                res.append(True)
+        return res
+                
     def getMaxAlternatingStringLength(k, s):
         #HW0819 : sliding window, Finite-State Machine(FSM) (optional)
-        return -1 #TBD
+        l = 0
+        max_length = 0
+        sameCnt = 1
+        s = stringToBool(s)
+
+        # for r in range(len(s)):
+        #     if (r - l + 1) % k != 0:
+        #         continue
+        #     #print(s[l:r+1])
+        #     if isAlter(k, s[l:r+1]):
+        #         max_length =  max(max_length, r - l + 1)
+        #         #print(max_length)
+        #     else:
+        #         l += 1
+        # aBBaaa  k=1 s=1 max=2
+        #   r
+        #  l
+        for r in range(1, len(s)):
+            print(l,r)
+            if s[r] == s[r-1]:
+                sameCnt += 1
+                if sameCnt > k:
+                    l = r - k
+            else:
+                if sameCnt != k:
+                    l = r 
+                sameCnt = 1
+                    
+            if sameCnt > k:
+                l = r - k
+                
+            if sameCnt == k:
+                max_length = max(max_length, r - l + 1)
+                sameCnt = 1
+            
+        return max_length #TBD
 
 
     k = 1
@@ -693,3 +887,33 @@ def leetcode_alternating_strings():
     s = "DDaaAAbbCC"
     maxLen = getMaxAlternatingStringLength(k, s)
     print("k=%d, string is %s => max len = %d (ans: 0)" % (k, s, maxLen))
+
+    print("-----------------")
+    #HW0821 : O(N)
+    def getMaxASLen(k, s):
+        # left = 0
+        # acc = 0
+        # for right in range(len(s)):
+            
+        return -1 #TBD
+    
+    k = 1
+    s = "aBBdaaa"
+    maxLen = getMaxASLen(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 2)" % (k, s, maxLen))
+    
+    k = 3
+    s = "DDaasAAbbCC"
+    maxLen = getMaxASLen(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 3)" % (k, s, maxLen))
+    
+    k = 2
+    s = "aafAXbbCDCCC"
+    maxLen = getMaxASLen(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 8)" % (k, s, maxLen))
+    
+    k = 3
+    s = "DDaaAAbbCC"
+    maxLen = getMaxASLen(k, s)
+    print("k=%d, string is %s => max len = %d (ans: 0)" % (k, s, maxLen))
+    
